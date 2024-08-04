@@ -50,7 +50,6 @@ const MatchDetailsPage = ({ matchId }) => {
                 { over: 45, runs: 8, wickets: 0 },
                 { over: 44, runs: 12, wickets: 1 },
                 { over: 43, runs: 6, wickets: 0 },
-                // ... more overs
             ]
         };
         setMatch(mockMatch);
@@ -84,184 +83,183 @@ const MatchDetailsPage = ({ matchId }) => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <Card className="mb-8">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold">
-                        {match.teams.home} vs {match.teams.away}
-                    </CardTitle>
-                    <p className="text-gray-600">{match.venue} • {match.date}</p>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <Flag country="IN" className="w-10 h-10 inline-block mr-2" />
-                            <span className="font-bold">{match.teams.home}</span>
-                            <p className="text-xl font-semibold">{match.score.home} ({match.overs.home} overs)</p>
-                        </div>
-                        <div className="text-right">
-                            <Flag country="AU" className="w-10 h-10 inline-block ml-2" />
-                            <span className="font-bold">{match.teams.away}</span>
-                            <p className="text-xl font-semibold">{match.score.away} ({match.overs.away} overs)</p>
-                        </div>
-                    </div>
-                    <p className="mt-4 text-center text-gray-600">{match.toss}</p>
-                </CardContent>
-            </Card>
-
-            <Tabs defaultValue="scorecard">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="scorecard">Scorecard</TabsTrigger>
-                    <TabsTrigger value="commentary">Commentary</TabsTrigger>
-                    <TabsTrigger value="overs">Overs</TabsTrigger>
-                    <TabsTrigger value="info">Info</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="scorecard">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Batting Summary</CardTitle>
+            <div className="flex flex-col lg:flex-row gap-6">
+                <aside className="lg:w-1/4">
+                    <Card className="sticky top-4 overflow-hidden border-gray-200 border">
+                        <CardHeader className="bg-green-600">
+                            <CardTitle className="text-xl text-white">Match Stats</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Batsman</TableHead>
-                                        <TableHead>Runs</TableHead>
-                                        <TableHead>Balls</TableHead>
-                                        <TableHead>4s</TableHead>
-                                        <TableHead>6s</TableHead>
-                                        <TableHead>SR</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {match.battingSummary.map((batsman, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{batsman.name}</TableCell>
-                                            <TableCell>{batsman.runs}</TableCell>
-                                            <TableCell>{batsman.balls}</TableCell>
-                                            <TableCell>{batsman.fours}</TableCell>
-                                            <TableCell>{batsman.sixes}</TableCell>
-                                            <TableCell>{((batsman.runs / batsman.balls) * 100).toFixed(2)}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                    <Card className="mt-4">
-                        <CardHeader>
-                            <CardTitle>Bowling Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Bowler</TableHead>
-                                        <TableHead>Overs</TableHead>
-                                        <TableHead>Maidens</TableHead>
-                                        <TableHead>Runs</TableHead>
-                                        <TableHead>Wickets</TableHead>
-                                        <TableHead>Economy</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {match.bowlingSummary.map((bowler, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{bowler.name}</TableCell>
-                                            <TableCell>{bowler.overs}</TableCell>
-                                            <TableCell>{bowler.maidens}</TableCell>
-                                            <TableCell>{bowler.runs}</TableCell>
-                                            <TableCell>{bowler.wickets}</TableCell>
-                                            <TableCell>{(bowler.runs / parseFloat(bowler.overs)).toFixed(2)}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="commentary">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Live Commentary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <ScrollArea className="h-[400px] w-full" onScrollCapture={handleScroll}>
-                                {commentary.map((item, index) => (
-                                    <div key={index} className="mb-4">
-                                        <span className="font-bold">{item.ball}</span>: {item.text}
-                                    </div>
-                                ))}
-                                {loading && <p>Loading more...</p>}
-                            </ScrollArea>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="overs">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Overs Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Over</TableHead>
-                                        <TableHead>Runs</TableHead>
-                                        <TableHead>Wickets</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {match.oversSummary.map((over, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{over.over}</TableCell>
-                                            <TableCell>{over.runs}</TableCell>
-                                            <TableCell>{over.wickets}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="info">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Match Information</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <h3 className="font-bold mb-2">Venue</h3>
-                            <p className="mb-4">{match.venue}</p>
-                            <h3 className="font-bold mb-2">Date</h3>
-                            <p className="mb-4">{match.date}</p>
-                            <h3 className="font-bold mb-2">Toss</h3>
-                            <p className="mb-4">{match.toss}</p>
-                            <h3 className="font-bold mb-2">Playing XI</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <h4 className="font-semibold mb-2">{match.teams.home}</h4>
-                                    <ul className="list-disc list-inside">
-                                        {match.playingXI.home.map((player, index) => (
-                                            <li key={index}>{player}</li>
-                                        ))}
-                                    </ul>
+                        <CardContent className="p-4 bg-white">
+                            <div className="space-y-4">
+                                <div className="p-3 border-l-4 bg-blue-50 border-blue-500">
+                                    <h3 className="font-semibold text-gray-800">
+                                        <Flag country="IN" className="inline-block mr-2" />
+                                        {match.teams.home}
+                                    </h3>
+                                    <p className="text-2xl font-bold text-blue-600">{match.score.home}</p>
+                                    <p className="text-sm text-gray-600">({match.overs.home} overs)</p>
                                 </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">{match.teams.away}</h4>
-                                    <ul className="list-disc list-inside">
-                                        {match.playingXI.away.map((player, index) => (
-                                            <li key={index}>{player}</li>
-                                        ))}
-                                    </ul>
+                                <div className="p-3 bg-green-50 border-l-4 border-green-500">
+                                    <h3 className="font-semibold text-gray-800">
+                                        <Flag country="AU" className="inline-block mr-2" />
+                                        {match.teams.away}
+                                    </h3>
+                                    <p className="text-2xl font-bold text-green-600">{match.score.away}</p>
+                                    <p className="text-sm text-gray-600">({match.overs.away} overs)</p>
+                                </div>
+                                <div className="pt-4 border-t border-gray-200">
+                                    <p className="text-sm text-gray-600">{match.venue}</p>
+                                    <p className="text-sm text-gray-600">{match.date}</p>
+                                </div>
+                                <div className="border border-green-500 p-3 shadow-md rounded-lg">
+                                    <p className="text-sm font-semibold text-green-800">Toss</p>
+                                    <p className="text-sm text-gray-700">{match.toss}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
-                </TabsContent>
-            </Tabs>
+                </aside>
+
+                <main className="lg:w-3/4">
+                    <Tabs defaultValue="scorecard">
+                        <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+                            <TabsTrigger value="scorecard" className="data-[state=active]:bg-white data-[state=active]:text-gray-800">Scorecard</TabsTrigger>
+                            <TabsTrigger value="commentary" className="data-[state=active]:bg-white data-[state=active]:text-gray-800">Commentary</TabsTrigger>
+                            <TabsTrigger value="info" className="data-[state=active]:bg-white data-[state=active]:text-gray-800">Info</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="scorecard" className="p-4">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Batting Summary</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Batsman</TableHead>
+                                                <TableHead>Runs</TableHead>
+                                                <TableHead>Balls</TableHead>
+                                                <TableHead>4s</TableHead>
+                                                <TableHead>6s</TableHead>
+                                                <TableHead>SR</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {match.battingSummary.map((batsman, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{batsman.name}</TableCell>
+                                                    <TableCell>{batsman.runs}</TableCell>
+                                                    <TableCell>{batsman.balls}</TableCell>
+                                                    <TableCell>{batsman.fours}</TableCell>
+                                                    <TableCell>{batsman.sixes}</TableCell>
+                                                    <TableCell>{((batsman.runs / batsman.balls) * 100).toFixed(2)}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </CardContent>
+                            </Card>
+                            <Card className="mt-4">
+                                <CardHeader>
+                                    <CardTitle>Bowling Summary</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Bowler</TableHead>
+                                                <TableHead>Overs</TableHead>
+                                                <TableHead>Maidens</TableHead>
+                                                <TableHead>Runs</TableHead>
+                                                <TableHead>Wickets</TableHead>
+                                                <TableHead>Economy</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {match.bowlingSummary.map((bowler, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{bowler.name}</TableCell>
+                                                    <TableCell>{bowler.overs}</TableCell>
+                                                    <TableCell>{bowler.maidens}</TableCell>
+                                                    <TableCell>{bowler.runs}</TableCell>
+                                                    <TableCell>{bowler.wickets}</TableCell>
+                                                    <TableCell>{(bowler.runs / parseFloat(bowler.overs)).toFixed(2)}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+
+                        <TabsContent value="commentary" className="p-4">
+                            <Card>
+                                <CardHeader className="bg-gray-100">
+                                    <CardTitle className="text-gray-800">Live Commentary</CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-4">
+                                    <div className="mb-4 p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                                        <h3 className="font-bold text-gray-800">Current Batsmen</h3>
+                                        <p className="text-gray-700">{match.battingSummary[0].name}: {match.battingSummary[0].runs} ({match.battingSummary[0].balls})</p>
+                                        <p className="text-gray-700">{match.battingSummary[1].name}: {match.battingSummary[1].runs} ({match.battingSummary[1].balls})</p>
+                                    </div>
+                                    <div className="mb-4 p-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
+                                        <h3 className="font-bold text-gray-800">Current Bowler</h3>
+                                        <p className="text-gray-700">{match.bowlingSummary[0].name}: {match.bowlingSummary[0].wickets}/{match.bowlingSummary[0].runs} ({match.bowlingSummary[0].overs} overs)</p>
+                                    </div>
+                                    <ScrollArea className="h-[300px] w-full" onScrollCapture={handleScroll}>
+                                        {commentary.map((item, index) => (
+                                            <div key={index} className="mb-4 p-2 bg-gray-50 rounded border-l-2 border-gray-300">
+                                                <span className="font-bold text-gray-700">{item.ball}</span>: {item.text}
+                                            </div>
+                                        ))}
+                                        {loading && <p className="text-gray-600">Loading more...</p>}
+                                    </ScrollArea>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="info" className="p-4">
+                            <div className="space-y-6">
+                                <div className="bg-green-50 border-l-4 border-green-500 p-4">
+                                    <h3 className="font-bold mb-1 text-gray-800">Match Highlights</h3>
+                                    <p className="text-gray-700">{match.toss}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold mb-2 text-lg text-gray-800">Playing XI</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-gray-50 p-4 rounded-lg">
+                                            <h4 className="font-semibold mb-2 text-gray-800">
+                                                <Flag country="IN" className="inline-block mr-2" />
+                                                {match.teams.home}
+                                            </h4>
+                                            <ol className="list-decimal list-inside space-y-1 text-gray-700">
+                                                {match.playingXI.home.map((player, index) => (
+                                                    <li key={index}>{player}</li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                        <div className="bg-gray-50 p-4 rounded-lg">
+                                            <h4 className="font-semibold mb-2 text-gray-800">
+                                                <Flag country="AU" className="inline-block mr-2" />
+                                                {match.teams.away}
+                                            </h4>
+                                            <ol className="list-decimal list-inside space-y-1 text-gray-700">
+                                                {match.playingXI.away.map((player, index) => (
+                                                    <li key={index}>{player}</li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </main>
+
+            </div>
+
         </div>
     );
 };
