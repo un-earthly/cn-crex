@@ -14,9 +14,6 @@ const MatchDetailsPage = ({ matchId }) => {
 
     useEffect(() => {
         fetchMatchDetails(matchId);
-    }, [matchId]);
-
-    useEffect(() => {
         fetchCommentary(matchId, 1);
     }, [matchId]);
 
@@ -54,7 +51,6 @@ const MatchDetailsPage = ({ matchId }) => {
 
     const fetchCommentary = async (id, page) => {
         setLoading(true);
-        // Simulate API call with delay
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const newCommentary = [

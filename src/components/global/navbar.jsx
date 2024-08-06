@@ -51,9 +51,7 @@ const Navbar = () => {
             title: 'Stats',
             icon: <Activity className="w-4 h-4" />,
             children: [
-                { href: "/stats/batting", icon: Activity, label: "Batting Stats" },
-                { href: "/stats/bowling", icon: Activity, label: "Bowling Stats" },
-                { href: "/stats/teams", icon: Trophy, label: "Team Rankings" },
+                  { href: "/stats/teams", icon: Trophy, label: "Team Rankings" },
                 { href: "/stats/players", icon: Trophy, label: "Player Rankings" },
             ],
         },
@@ -68,7 +66,7 @@ const Navbar = () => {
     ];
 
     return (
-        <header className="bg-white shadow-md relative z-50">
+        <header className="bg-white shadow-md sticky top-0 left-0 w-full z-50">
             <div className="container mx-auto px-4">
                 <nav className="flex items-center justify-between h-16">
                     {/* Logo */}
