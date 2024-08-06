@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Clock, Share2, ThumbsUp, User } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from "@/components/ui/card";
 import Link from 'next/link';
+import Footer from '@/components/global/footer';
 
 const BlogDetailsPage = ({
     post = {
@@ -31,7 +32,7 @@ const BlogDetailsPage = ({
                 <div className="container mx-auto px-4">
                     <Link href="/" className="inline-flex items-center text-green-100 hover:text-white mb-4">
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Blog
+                        Back to Home
                     </Link>
                     <h1 className="text-3xl sm:text-4xl font-bold mb-4">{post.title}</h1>
                     <div className="flex flex-wrap items-center gap-4 text-sm">
@@ -111,11 +112,7 @@ const BlogDetailsPage = ({
                 </Card>
             </main>
 
-            <footer className="bg-green-600 text-white py-6 mt-8">
-                <div className="container mx-auto px-4 text-center">
-                    <p>© 2024 Cricket Blog. All rights reserved.</p>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

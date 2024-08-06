@@ -9,6 +9,7 @@ import { Calendar, Clock, Play, RefreshCcw, Tag, TrendingUp, User } from 'lucide
 import Link from 'next/link';
 import BlogPost from '@/components/global/blogPost';
 import { blogPosts as initialBlogPosts, liveMatches } from '../../data';
+import Footer from '@/components/global/footer';
 
 const LiveStreamingSection = () => (
   <section className="relative bg-gradient-to-r from-green-600 to-green-800 text-white py-12 sm:py-16 overflow-hidden">
@@ -77,13 +78,6 @@ const ScoreCard = ({ match }) => (
 );
 
 
-const Footer = () => (
-  <footer className="bg-gray-100 py-6 mt-8">
-    <div className="container mx-auto px-4">
-      <p className="text-center text-gray-600">© 2024 Cricket Live. All rights reserved.</p>
-    </div>
-  </footer>
-);
 const LandingPage = () => {
   const [blogPosts, setBlogPosts] = useState(initialBlogPosts);
   const [loading, setLoading] = useState(false);
