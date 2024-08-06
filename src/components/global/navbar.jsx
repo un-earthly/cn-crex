@@ -73,7 +73,12 @@ const Navbar = () => {
                 <nav className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <Link href="/" className="text-xl font-bold text-green-600 hover:text-green-800 transition-colors">CN</Link>
+                        <Link
+                            href="/"
+                            className="text-xl font-bold text-green-600 hover:text-green-800 transition-colors"
+                        >
+                            CN
+                        </Link>
                     </div>
 
                     {/* Mobile and Tablet Menu Button */}
@@ -88,13 +93,18 @@ const Navbar = () => {
                         <NavigationMenu>
                             <NavigationMenuList className="flex space-x-4">
                                 <NavigationMenuItem>
-                                    <NavigationMenuLink
-                                        href="/"
-                                        className="px-3 py-2 text-gray-700 hover:text-green-600 transition-colors"
+                                    <Link href="/"
+                                        passHref
+                                        legacyBehavior
                                     >
-                                        <Home className="w-4 h-4 inline-block mr-1" />
-                                        Home
-                                    </NavigationMenuLink>
+                                        <NavigationMenuLink
+
+                                            className="px-3 py-2 text-gray-700 hover:text-green-600 transition-colors"
+                                        >
+                                            <Home className="w-4 h-4 inline-block mr-1" />
+                                            Home
+                                        </NavigationMenuLink>
+                                    </Link>
                                 </NavigationMenuItem>
 
                                 {menuItems.map((item, index) => (
@@ -107,13 +117,18 @@ const Navbar = () => {
                                             <ul className="grid gap-3 p-4 w-[400px] lg:w-[500px] lg:grid-cols-2">
                                                 {item.children.map((subItem, subIndex) => (
                                                     <li key={subIndex}>
-                                                        <NavigationMenuLink
+                                                        <Link
+                                                            passHref
                                                             href={subItem.href}
-                                                            className="flex items-center p-2 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+                                                            legacyBehavior
                                                         >
-                                                            <subItem.icon className="w-4 h-4 mr-2" />
-                                                            {subItem.label}
-                                                        </NavigationMenuLink>
+                                                            <NavigationMenuLink
+                                                                className="flex items-center p-2 rounded-md text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+                                                            >
+                                                                <subItem.icon className="w-4 h-4 mr-2" />
+                                                                {subItem.label}
+                                                            </NavigationMenuLink>
+                                                        </Link>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -147,13 +162,13 @@ const Navbar = () => {
                                 <ul className="space-y-2">
                                     {item.children.map((subItem, subIndex) => (
                                         <li key={subIndex}>
-                                            <a
+                                            <Link
                                                 href={subItem.href}
                                                 className="flex items-center p-2 rounded-md text-gray-700 hover:bg-green-100 hover:text-green-600 transition-colors"
                                             >
                                                 <subItem.icon className="w-4 h-4 mr-2" />
                                                 {subItem.label}
-                                            </a>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
@@ -163,7 +178,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Overlay */}
             {
                 isOpen && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 z-20 xl:hidden" onClick={toggleMenu}></div>
