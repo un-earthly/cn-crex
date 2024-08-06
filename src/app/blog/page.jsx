@@ -1,4 +1,5 @@
 import BlogPost from "@/components/global/blogPost";
+import { Loader2 } from "lucide-react";
 
 const BlogListingPage = () => {
     const [posts, setPosts] = useState([]);
