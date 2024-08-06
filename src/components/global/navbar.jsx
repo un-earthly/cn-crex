@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { Activity, Trophy, Calendar, Globe, Home, Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
+import Link from 'next/link';
 
 const Accordion = ({ title, icon, children }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -72,7 +73,7 @@ const Navbar = () => {
                 <nav className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <a href="/" className="text-xl font-bold text-green-600 hover:text-green-800 transition-colors">CN</a>
+                        <Link href="/" className="text-xl font-bold text-green-600 hover:text-green-800 transition-colors">CN</Link>
                     </div>
 
                     {/* Mobile and Tablet Menu Button */}
