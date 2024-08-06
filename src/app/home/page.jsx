@@ -6,6 +6,35 @@ import Flag from 'react-flagkit';
 import { Calendar, Clock, Play, RefreshCcw, Tag, TrendingUp, User } from 'lucide-react';
 import Link from 'next/link';
 
+const LiveStreamingSection = () => (
+    <section className="relative bg-gradient-to-r from-green-600 to-green-800 text-white py-12 sm:py-16 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+            <img
+                src="https://images.unsplash.com/photo-1594470117722-de4b9a02ebed?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Cricket Stadium"
+                className="w-full h-full object-cover opacity-30"
+            />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6">Live Streaming</h2>
+            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between">
+                <div className="flex items-center mb-4 sm:mb-0">
+                    <div className="bg-red-600 rounded-full p-2 mr-4">
+                        <Play className="w-8 h-8" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold">India vs Australia</h3>
+                        <p className="text-sm text-green-200">ICC World Cup 2024 - Final</p>
+                    </div>
+                </div>
+                <Button className="bg-white text-green-800 hover:bg-green-100 transition-colors duration-300">
+                    Watch Now
+                </Button>
+            </div>
+        </div>
+    </section>
+);
+
 const ScoreCard = ({ match }) => (
     <Link href={`match-details/${match.matchId}`}>
         <Card className="h-full transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-md rounded-lg overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-200">
@@ -84,9 +113,13 @@ const BlogPost = ({ post }) => (
             </div>
         </CardContent>
         <CardFooter className="pt-1 sm:pt-2 flex flex-wrap justify-between items-center gap-2 border-t border-gray-100">
-            <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800 transition-colors text-xs sm:text-sm">
-                Read More
-            </Button>
+            <Link href={`/blog/${post.id}`}>
+
+                <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800 transition-colors text-xs sm:text-sm">
+                    Read More
+                </Button>
+            </Link>
+
             <div className="flex flex-wrap gap-1 sm:gap-2">
                 {post.tags.map((tag, index) => (
                     <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full whitespace-nowrap">
@@ -96,6 +129,7 @@ const BlogPost = ({ post }) => (
             </div>
         </CardFooter>
     </Card>
+
 );
 
 const Footer = () => (
@@ -201,6 +235,8 @@ const LandingPage = () => {
     return (
         <div className="min-h-screen flex flex-col">
             <main className="flex-grow">
+                <LiveStreamingSection />
+
                 <div className="container mx-auto px-4 py-8 space-y-12 sm:space-y-16">
                     <section>
                         <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Live Scores</h2>

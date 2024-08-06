@@ -13,17 +13,14 @@ const MatchDetailsPage = ({ matchId }) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Fetch match details
         fetchMatchDetails(matchId);
     }, [matchId]);
 
     useEffect(() => {
-        // Fetch initial commentary
         fetchCommentary(matchId, 1);
     }, [matchId]);
 
     const fetchMatchDetails = async (id) => {
-        // Simulate API call
         const mockMatch = {
             id: id,
             teams: { home: "India", away: "Australia" },
@@ -64,7 +61,6 @@ const MatchDetailsPage = ({ matchId }) => {
             { ball: "44.6", text: "FOUR! Brilliant shot through the covers." },
             { ball: "44.5", text: "Good length delivery, defended back to the bowler." },
             { ball: "44.4", text: "Short ball, pulled away for a single." },
-            // ... more commentary
         ];
 
         setCommentary(prev => [...prev, ...newCommentary]);
@@ -199,12 +195,12 @@ const MatchDetailsPage = ({ matchId }) => {
                                     <CardTitle className="text-gray-800">Live Commentary</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-4">
-                                    <div className="mb-4 p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                                    <div className="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
                                         <h3 className="font-bold text-gray-800">Current Batsmen</h3>
                                         <p className="text-gray-700">{match.battingSummary[0].name}: {match.battingSummary[0].runs} ({match.battingSummary[0].balls})</p>
                                         <p className="text-gray-700">{match.battingSummary[1].name}: {match.battingSummary[1].runs} ({match.battingSummary[1].balls})</p>
                                     </div>
-                                    <div className="mb-4 p-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
+                                    <div className="mb-4 p-3 bg-gray-50 border-l-4 border-green-500">
                                         <h3 className="font-bold text-gray-800">Current Bowler</h3>
                                         <p className="text-gray-700">{match.bowlingSummary[0].name}: {match.bowlingSummary[0].wickets}/{match.bowlingSummary[0].runs} ({match.bowlingSummary[0].overs} overs)</p>
                                     </div>
