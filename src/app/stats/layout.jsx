@@ -6,7 +6,7 @@ import Footer from '@/components/global/footer';
 const StatsLayout = ({ children }) => {
     return (
         <>
-            <div className="min-h-screen bg-gray-100">
+            <div className="min-h-screen ">
                 {children}
             </div>
             <Footer />

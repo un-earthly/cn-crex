@@ -198,8 +198,8 @@ const TeamStandingsPage = () => {
             <main className="py-8">
                 <Container>
                     <Tabs defaultValue="test" className="w-full">
-                        <TabsList className="w-full justify-start mb-6">
-                            <TabsTrigger value="test">Test</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-3 mb-6">
+                            <TabsTrigger value="test" >Test</TabsTrigger>
                             <TabsTrigger value="odi">ODI</TabsTrigger>
                             <TabsTrigger value="t20">T20</TabsTrigger>
                         </TabsList>
