@@ -2,36 +2,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Flag from 'react-flagkit';
-import { ArrowLeft, Play } from 'lucide-react';
+import { ArrowLeft, Loader, Loader2, Play } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Container from '@/components/global/container';
 
-const RankingsIntroSection = () => {
-    return (
-        <header className="relative bg-gradient-to-r from-green-800 to-green-900 text-white py-12 overflow-hidden">
-            <div className="absolute inset-0 z-0">
-                <img
-                    src="https://images.icc-cricket.com/image/upload/t_ratio21_9-size60/prd/tevxytyonxrsx90jpnqq"
-                    alt="Cricket match"
-                    className="opacity-30 object-cover w-full h-full"
-                    layout="fill"
-                    style={{ objectFit: "cover" }}
-                />
-            </div>
-            <div className="container mx-auto px-4 relative z-10">
-                <Link href="/" className="inline-flex items-center text-green-100 hover:text-white mb-4">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Home
-                </Link>
-                <h1 className="text-3xl sm:text-4xl font-bold mb-8">ICC Team Rankings</h1>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                    {/* Add any additional content if needed */}
-                </div>
-            </div>
-        </header>
-    );
-};
 
 const cricketTeams = [
     { name: 'Australia', code: 'AU' },
@@ -89,36 +67,60 @@ const StandingsTable = ({ format, initialStandings }) => {
     };
 
     return (
-        <div className="flex-1 min-w-[300px] p-4 bg-white shadow rounded-lg">
-            <ScrollArea className="h-[50vh]" onScrollCapture={handleScroll}>
-                <Table className="w-full border border-gray-200">
-                    <TableHeader className="bg-green-100 sticky top-0 z-10">
-                        <TableRow>
-                            <TableHead className="w-[60px] p-2">Rank</TableHead>
-                            <TableHead className="p-2">Team</TableHead>
-                            <TableHead className="p-2">Rating</TableHead>
-                            <TableHead className="p-2">Points</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {standings?.map((team, index) => (
-                            <TableRow key={`${format}-${team.rank}-${index}`} className="hover:bg-green-50">
-                                <TableCell className="font-medium p-2">{team.rank}</TableCell>
-                                <TableCell className="p-2">
-                                    <div className="flex items-center">
-                                        <Flag country={team.code} className="inline-block mr-2" />
-                                        {team.team}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="p-2">{team.rating}</TableCell>
-                                <TableCell className="p-2">{team.points}</TableCell>
+        <Card className="flex-1 min-w-[300px]">
+            <CardHeader>
+                <CardTitle>{format === "t20" ? "T-20 " : format === "test" ? "Test " : "ODI "}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ScrollArea className="h-[50vh] w-full" onScrollCapture={handleScroll}>
+                    <Table>
+                        <TableHeader className="sticky top-0 z-10 bg-background">
+                            <TableRow>
+                                <TableHead className="w-[60px]">Rank</TableHead>
+                                <TableHead>Team</TableHead>
+                                <TableHead>Rating</TableHead>
+                                <TableHead>Points</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                {loading && <div className="p-4 text-center text-gray-500">Loading more data...</div>}
-            </ScrollArea>
-        </div>
+                        </TableHeader>
+                        <TableBody>
+                            {standings?.map((team, index) => (
+                                <TableRow
+                                    key={`${format}-${team.rank}-${index}`}
+                                    className={index <= 2 ? "font-medium" : ""}
+                                >
+                                    <TableCell>
+                                        <Badge
+                                            variant={index === 0 ? "default" : "secondary"}
+                                            className={`
+                        ${index === 0 ? 'bg-green-500 hover:bg-green-600' : ''}
+                        ${index === 1 ? 'bg-gray-400 hover:bg-gray-500' : ''}
+                        ${index === 2 ? 'bg-orange-400 hover:bg-orange-500' : ''}
+                      `}
+                                        >
+                                            {team.rank}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center space-x-2">
+                                            <Flag country={team.code} />
+                                            <span>{team.team}</span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>{team.rating}</TableCell>
+                                    <TableCell>{team.points}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    {loading && (
+                        <div className="py-4 text-center text-muted-foreground">
+                            <Loader2 className="inline animate-spin mr-2" />
+                            Loading more data...
+                        </div>
+                    )}
+                </ScrollArea>
+            </CardContent>
+        </Card>
 
     );
 };
@@ -170,15 +172,58 @@ const TeamStandingsPage = () => {
     };
 
     return (
-        <div className=" min-h-screen">
-            <RankingsIntroSection />
-            <div className="container mx-auto px-4 py-8">
-                <div className="flex flex-wrap justify-between gap-4">
-                    <StandingsTable format="test" initialStandings={formatStandings.test} />
-                    <StandingsTable format="odi" initialStandings={formatStandings.odi} />
-                    <StandingsTable format="t20" initialStandings={formatStandings.t20} />
+        <div className="min-h-screen bg-background">
+            <header className="relative bg-gradient-to-r from-green-800 to-green-900 text-white py-12 overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="https://images.icc-cricket.com/image/upload/t_ratio21_9-size60/prd/tevxytyonxrsx90jpnqq"
+                        alt="Cricket match"
+                        className="opacity-30 object-cover w-full h-full"
+                    />
                 </div>
-            </div>
+                <Container className="relative z-10">
+                    <Link
+                        href="/"
+                        className="inline-flex items-center text-green-100 hover:text-white mb-4 transition-colors"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Back to Home
+                    </Link>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8">
+                        ICC Team Rankings
+                    </h1>
+                </Container>
+            </header>
+
+            <main className="py-8">
+                <Container>
+                    <Tabs defaultValue="test" className="w-full">
+                        <TabsList className="w-full justify-start mb-6">
+                            <TabsTrigger value="test">Test</TabsTrigger>
+                            <TabsTrigger value="odi">ODI</TabsTrigger>
+                            <TabsTrigger value="t20">T20</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="test">
+                            <StandingsTable
+                                format="test"
+                                initialStandings={formatStandings.test}
+                            />
+                        </TabsContent>
+                        <TabsContent value="odi">
+                            <StandingsTable
+                                format="odi"
+                                initialStandings={formatStandings.odi}
+                            />
+                        </TabsContent>
+                        <TabsContent value="t20">
+                            <StandingsTable
+                                format="t20"
+                                initialStandings={formatStandings.t20}
+                            />
+                        </TabsContent>
+                    </Tabs>
+                </Container>
+            </main>
         </div>
     );
 };
