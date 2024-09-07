@@ -31,6 +31,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-flagkit": "^2.0.4",
+    "swiper": "^11.1.12",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },
