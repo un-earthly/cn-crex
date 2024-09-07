@@ -80,14 +80,14 @@ export default function Component({ children }) {
                                     className="justify-start"
                                     onClick={() => handleTabChange('men')}
                                 >
-                                    Men's Rankings
+                                    Men&apos;s Rankings
                                 </Button>
                                 <Button
                                     variant={activeTab === 'women' ? 'default' : 'ghost'}
                                     className="justify-start"
                                     onClick={() => handleTabChange('women')}
                                 >
-                                    Women's Rankings
+                                    Women&apos;s Rankings
                                 </Button>
                             </nav>
                         </CardContent>

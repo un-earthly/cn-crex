@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 import Loading from "@/components/global/loading";
 import axios from "axios";
+import DataNotFound from "@/components/global/notfound";
 
 
 

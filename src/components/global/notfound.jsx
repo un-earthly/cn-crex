@@ -8,7 +8,7 @@ export default function DataNotFound() {
                 <AlertCircle className="mx-auto mb-4 h-16 w-16 text-yellow-400" />
                 <h1 className="text-3xl font-bold mb-2">Oops! No Data Found</h1>
                 <p className="mb-6 text-gray-400">
-                    We couldn't find the match data you're looking for.
+                    We couldn&apos;t find the match data you&apos;re looking for.
                     The cricketers might be taking an unexpected tea break!
                 </p>
                 <Button
