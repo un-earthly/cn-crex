@@ -13,6 +13,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import Link from 'next/link';
 
 const ScoreCard = ({ match }) => {
   const getStatusColor = (status) => {
@@ -34,34 +35,36 @@ const ScoreCard = ({ match }) => {
 
 
   return (
-    <div
-      style={{ backgroundImage: "url('/bg-stedium.jpg')" }}
-      className="bg-black h-96 w-80 bg-cover bg-center p-6 rounded-lg shadow-lg max-w-2xl mx-auto text-white">
+    <Link href={match?.link}>
+      <div
+        style={{ backgroundImage: "url('/bg-stedium.jpg')" }}
+        className="bg-black h-96 w-80 bg-cover bg-center p-6 rounded-lg shadow-lg max-w-2xl mx-auto text-white">
 
-      <div className="flex justify-between">
-        <div className="div">
-          <img className='h-24 w-24' src={match.team1.logo} alt="" />
-        </div>
-        <div className="mt-14">
-          <img className='h-24 w-24' src={match.team2.logo} alt="" />
-        </div>
-      </div>
-
-      <div className="bg-black bg-opacity-40 p-4 rounded-md">
-        <div className="flex justify-between mb-2">
-          <span className="font-bold">{match.team1.name}</span>
-          <span>{match.team1.score} ({match.team1.overs} overs)</span>
-        </div>
         <div className="flex justify-between">
-          <span className="font-bold">{match.team2.name}</span>
-          <span>{match.team2.score || 'Yet to bat'}</span>
+          <div className="div">
+            <img className='h-24 w-24' src={match.team1.logo} alt="" />
+          </div>
+          <div className="mt-14">
+            <img className='h-24 w-24' src={match.team2.logo} alt="" />
+          </div>
         </div>
-        <div className="mt-4 text-center">
-          <p className="text-sm">{match.result}</p>
-        </div>
-      </div>
 
-    </div>
+        <div className="bg-black bg-opacity-40 p-4 rounded-md">
+          <div className="flex justify-between mb-2">
+            <span className="font-bold">{match.team1.name}</span>
+            <span>{match.team1.score} ({match.team1.overs} overs)</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-bold">{match.team2.name}</span>
+            <span>{match.team2.score || 'Yet to bat'}</span>
+          </div>
+          <div className="mt-4 text-center">
+            <p className="text-sm">{match.result}</p>
+          </div>
+        </div>
+
+      </div>
+    </Link>
   );
 };
 

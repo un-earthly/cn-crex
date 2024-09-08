@@ -31,7 +31,7 @@ export default function NewsPage({ params }) {
         <h1 className="text-3xl font-bold mb-8 text-center">{title}</h1>
         <div className="grid gap-6 md:grid-cols-2">
             {data.map((item, index) => (
-                <Link href={item.url} key={index} className={`group ${item.excerpt ? 'md:col-span-2 ' : ''}`}>
+                <Link href={item.url.replace("https://cricket.one", "")} key={index} className={`group ${item.excerpt ? 'md:col-span-2 ' : ''}`}>
                     <Card className="overflow-hidden h-full flex transition-shadow hover:shadow-lg">
                         <div className="relative basis-1/4">
                             <img
