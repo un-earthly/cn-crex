@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, MapPin, Play, Radio, RefreshCcw, Shield, Tag, TrendingUp, Trophy, User } from 'lucide-react';
+import { Calendar, CalendarDays, Clock, MapPin, Play, Radio, RefreshCcw, Shield, Tag, TrendingUp, Trophy, User } from 'lucide-react';
 import BlogPost from '@/components/global/blogPost';
 import Footer from '@/components/global/footer';
 import axios from 'axios';
@@ -68,6 +68,53 @@ const ScoreCard = ({ match }) => {
   );
 };
 
+const EventCard = ({ event }) => {
+  const eventDate = new Date(event.TimeStart);
+  const formattedDate = eventDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  const formattedTime = eventDate.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  return (
+    <Link href={`/stream?chid=${event.Channel}`} passHref>
+      <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+        <CardHeader className="bg-gray-50 border-b">
+          <h3 className="text-lg font-semibold">{event.Name}</h3>
+          <p className="text-sm text-gray-500">{event.League}</p>
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-medium">{event.Home}</span>
+            <span className="text-sm text-gray-500">vs</span>
+            <span className="font-medium">{event.Away}</span>
+          </div>
+          <div className="flex items-center text-sm text-gray-600 mt-2">
+            <CalendarDays className="w-4 h-4 mr-2" />
+            <span>{formattedDate}</span>
+          </div>
+          <div className="flex items-center text-sm text-gray-600 mt-1">
+            <Clock className="w-4 h-4 mr-2" />
+            <span>{formattedTime}</span>
+          </div>
+        </CardContent>
+        <CardFooter className="bg-gray-50 border-t p-3">
+          <div className="w-full text-center text-sm font-medium">
+            {event.IsLive ? (
+              <span className="text-green-600">Live Now</span>
+            ) : (
+              <span className="text-blue-600">Upcoming</span>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
+  );
+};
 const LandingPage = () => {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -75,21 +122,21 @@ const LandingPage = () => {
   const [newses, setNewses] = useState([]);
   const [page, setPage] = useState(0);
   const [liveMatches, setLiveMatches] = useState([]);
-  // const [events, setEvents] = useState([])
+  const [matches, setmatches] = useState([])
 
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     try {
-  //       const response = await axios.get('/api/get-matches')
-  //       setEvents(response.data.data.getMatches)
-  //       console.log(response)
-  //     } catch (error) {
-  //       console.error('Error fetching events:', error)
-  //     }
-  //   }
+  useEffect(() => {
+    const fetchmatches = async () => {
+      try {
+        const response = await axios.get('/api/get-matches')
+        setmatches(response.data.data)
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching matches:', error)
+      }
+    }
 
-  //   fetchEvents()
-  // }, [])
+    fetchmatches()
+  }, [])
   const fetchNewses = useCallback(async () => {
     try {
       setLoading2(true);
@@ -175,7 +222,7 @@ const LandingPage = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8 space-y-12 sm:space-y-16">
-          <section>
+          {/* <section>
             <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Live Scores</h2>
             <Carousel className="w-full">
               <CarouselContent className="-ml-2 sm:-ml-4">
@@ -219,6 +266,29 @@ const LandingPage = () => {
                       <ScoreCard match={match} />
                     </CarouselItem>
                   ))
+                )}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex -left-4 sm:-left-5" />
+              <CarouselNext className="hidden sm:flex -right-4 sm:-right-5" />
+            </Carousel>
+          </section> */}
+
+          <section>
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Matches</h2>
+            <Carousel className="w-full">
+              <CarouselContent className="-ml-2 sm:-ml-4">
+                {matches.length > 0 ? (
+                  matches.map((event, index) => (
+                    <CarouselItem key={index} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                      <EventCard event={event} />
+                    </CarouselItem>
+                  ))
+                ) : (
+                  <CarouselItem className="pl-2 sm:pl-4 basis-full">
+                    <Card className="p-6">
+                      <p className="text-center text-gray-500">No upcoming matches found.</p>
+                    </Card>
+                  </CarouselItem>
                 )}
               </CarouselContent>
               <CarouselPrevious className="hidden sm:flex -left-4 sm:-left-5" />

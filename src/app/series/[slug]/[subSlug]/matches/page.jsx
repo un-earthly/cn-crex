@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { CalendarDays, Clock } from "lucide-react"
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/loading";
+import Link from "next/link";
 
 export default function Component({ params }) {
     const { slug, subSlug } = params;
@@ -37,36 +38,38 @@ export default function Component({ params }) {
                     </h2>
                     <div className="grid gap-6 md:grid-cols-2">
                         {matchDay?.matches?.map((match, matchIndex) => (
-                            <Card key={matchIndex}>
-                                <CardHeader>
-                                    <CardTitle className="text-lg">{match.matchInfo}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <div className="flex-1">
-                                            <p className="font-semibold">{match.team1 || "TBA"}</p>
-                                            <p className="text-muted-foreground">{match.team1Score}</p>
+                            <Link key={matchIndex} href={match.link}>
+                                <Card >
+                                    <CardHeader>
+                                        <CardTitle className="text-lg">{match.matchInfo}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex justify-between items-center mb-4">
+                                            <div className="flex-1">
+                                                <p className="font-semibold">{match.team1 || "TBA"}</p>
+                                                <p className="text-muted-foreground">{match.team1Score}</p>
+                                            </div>
+                                            <div className="text-center px-4">
+                                                <p className="text-xl font-bold">vs</p>
+                                            </div>
+                                            <div className="flex-1 text-right">
+                                                <p className="font-semibold">{match.team2}</p>
+                                                <p className="text-muted-foreground">{match.team2Score}</p>
+                                            </div>
                                         </div>
-                                        <div className="text-center px-4">
-                                            <p className="text-xl font-bold">vs</p>
-                                        </div>
-                                        <div className="flex-1 text-right">
-                                            <p className="font-semibold">{match.team2}</p>
-                                            <p className="text-muted-foreground">{match.team2Score}</p>
-                                        </div>
-                                    </div>
-                                    {match.result ? (
-                                        <Badge variant="secondary" className="w-full justify-center">
-                                            {match.result}
-                                        </Badge>
-                                    ) : match.startTime ? (
-                                        <div className="flex items-center justify-center text-muted-foreground">
-                                            <Clock className="mr-2 h-4 w-4" />
-                                            {match.startTime}
-                                        </div>
-                                    ) : null}
-                                </CardContent>
-                            </Card>
+                                        {match.result ? (
+                                            <Badge variant="secondary" className="w-full justify-center">
+                                                {match.result}
+                                            </Badge>
+                                        ) : match.startTime ? (
+                                            <div className="flex items-center justify-center text-muted-foreground">
+                                                <Clock className="mr-2 h-4 w-4" />
+                                                {match.startTime}
+                                            </div>
+                                        ) : null}
+                                    </CardContent>
+                                </Card>
+                            </Link>
                         ))}
                     </div>
                 </div>

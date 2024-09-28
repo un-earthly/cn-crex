@@ -7,6 +7,7 @@ import { Ribbon, Trophy } from "lucide-react"
 import { Fragment, useCallback, useEffect, useRef, useState } from "react"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Loading from "@/components/global/loading.jsx"
+import DataNotFound from "@/components/global/notfound"
 export default function LivePage({ params }) {
     const { param1, slug, slugMn, param2, param3, slugMd } = params;
     const [commentary, setCommentary] = useState([]);
@@ -30,14 +31,18 @@ export default function LivePage({ params }) {
     }, [loading, hasMore]);
 
     const loadMoreCommentary = async () => {
-        if (loading || !hasMore) return;
+        if (comLoading || !hasMore) return;
         setComLoading(true);
         setError('');
 
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE}/api/match/com/${param1}/${slug}/${slugMn}/${param2}/${param3}/${slugMd}/${page}`);
 
-            setCommentary(prevCommentary => [...prevCommentary, ...response.data.commentary]);
+            if (response.data?.commentary?.length === 0) {
+                setHasMore(false); // No more commentary available
+            }
+
+            setCommentary(prevCommentary => [...prevCommentary, ...response.data?.commentary]);
             setPage(prevPage => prevPage + 1);
             setHasMore(response.data.hasMore);
 
@@ -47,20 +52,26 @@ export default function LivePage({ params }) {
             setComLoading(false);
         }
     };
+
     const loadData = async () => {
         setLoading(true);
         setError('');
 
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE}/api/match/scoreboard/${param1}/${slug}/${slugMn}/${param2}/${param3}/${slugMd}/live`);
-            console.log(response)
-            setData(response.data)
+
+            if (!response.data) {
+                setError('No match data available');
+            } else {
+                setData(response.data);
+            }
+
         } catch {
             setError('Failed to load Match details');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         loadMoreCommentary();
@@ -69,6 +80,10 @@ export default function LivePage({ params }) {
 
     if (loading) {
         return <Loading />
+    }
+
+    if (!data) {
+        return <DataNotFound />
     }
     return (
         <Card>
@@ -227,9 +242,6 @@ const MatchPage = ({ playersData, oversData, projectedScore, probability, player
                             <Badge key={idx} variant="secondary">{perf}</Badge>
                         ))}
                     </div>
-                    {/* <p className="text-sm text-blue-500 hover:underline">
-                        <a href={playerOfTheMatch.link}>View Profile</a>
-                    </p> */}
                 </div>
             ) : (
                 <p className="text-muted-foreground">No player of the match selected yet</p>
