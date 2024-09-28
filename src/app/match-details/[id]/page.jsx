@@ -6,48 +6,48 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Flag from 'react-flagkit';
 
-const MatchDetailsPage = ({ matchId }) => {
+export default function MatchDetailsPage() {
     const [match, setMatch] = useState(null);
     const [commentary, setCommentary] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        fetchMatchDetails(matchId);
-        fetchCommentary(matchId, 1);
-    }, [matchId]);
+    // useEffect(() => {
+    //     fetchMatchDetails(matchId);
+    //     fetchCommentary(matchId, 1);
+    // }, [matchId]);
 
-    const fetchMatchDetails = async (id) => {
-        const mockMatch = {
-            id: id,
-            teams: { home: "India", away: "Australia" },
-            score: { home: "280/4", away: "" },
-            overs: { home: "45.0", away: "0.0" },
-            toss: "India won the toss and elected to bat",
-            venue: "Melbourne Cricket Ground",
-            date: "August 15, 2024",
-            playingXI: {
-                home: ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11"],
-                away: ["Player A", "Player B", "Player C", "Player D", "Player E", "Player F", "Player G", "Player H", "Player I", "Player J", "Player K"]
-            },
-            battingSummary: [
-                { name: "Player 1", runs: 85, balls: 94, fours: 8, sixes: 2 },
-                { name: "Player 2", runs: 65, balls: 70, fours: 6, sixes: 1 },
-                { name: "Player 3", runs: 45, balls: 40, fours: 4, sixes: 1 },
-            ],
-            bowlingSummary: [
-                { name: "Player A", overs: "10", maidens: 1, runs: 52, wickets: 1 },
-                { name: "Player B", overs: "9", maidens: 0, runs: 48, wickets: 2 },
-                { name: "Player C", overs: "8", maidens: 0, runs: 45, wickets: 1 },
-            ],
-            oversSummary: [
-                { over: 45, runs: 8, wickets: 0 },
-                { over: 44, runs: 12, wickets: 1 },
-                { over: 43, runs: 6, wickets: 0 },
-            ]
-        };
-        setMatch(mockMatch);
-    };
+    // const fetchMatchDetails = async (id) => {
+    //     const mockMatch = {
+    //         id: id,
+    //         teams: { home: "India", away: "Australia" },
+    //         score: { home: "280/4", away: "" },
+    //         overs: { home: "45.0", away: "0.0" },
+    //         toss: "India won the toss and elected to bat",
+    //         venue: "Melbourne Cricket Ground",
+    //         date: "August 15, 2024",
+    //         playingXI: {
+    //             home: ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11"],
+    //             away: ["Player A", "Player B", "Player C", "Player D", "Player E", "Player F", "Player G", "Player H", "Player I", "Player J", "Player K"]
+    //         },
+    //         battingSummary: [
+    //             { name: "Player 1", runs: 85, balls: 94, fours: 8, sixes: 2 },
+    //             { name: "Player 2", runs: 65, balls: 70, fours: 6, sixes: 1 },
+    //             { name: "Player 3", runs: 45, balls: 40, fours: 4, sixes: 1 },
+    //         ],
+    //         bowlingSummary: [
+    //             { name: "Player A", overs: "10", maidens: 1, runs: 52, wickets: 1 },
+    //             { name: "Player B", overs: "9", maidens: 0, runs: 48, wickets: 2 },
+    //             { name: "Player C", overs: "8", maidens: 0, runs: 45, wickets: 1 },
+    //         ],
+    //         oversSummary: [
+    //             { over: 45, runs: 8, wickets: 0 },
+    //             { over: 44, runs: 12, wickets: 1 },
+    //             { over: 43, runs: 6, wickets: 0 },
+    //         ]
+    //     };
+    //     setMatch(mockMatch);
+    // };
 
     const fetchCommentary = async (id, page) => {
         setLoading(true);
@@ -256,4 +256,3 @@ const MatchDetailsPage = ({ matchId }) => {
     );
 };
 
-export default MatchDetailsPage;
