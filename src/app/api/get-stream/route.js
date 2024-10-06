@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 function getUserIP(req) {
     const forwardedFor = req.headers.get('x-forwarded-for');
-    const userIP = forwardedFor ? forwardedFor.split(',')[0] : req.ip;
-    return userIP;
+    return forwardedFor ? forwardedFor.split(',')[0] : req.ip;
 }
 
 export async function GET(req) {
@@ -22,18 +21,29 @@ export async function GET(req) {
     }
 
     try {
-        // Call the external API
         const apiUrl = `https://e765432.xyz/static/69fb31e65e4ed5d6eaebf3b8b0e0e6a715c77cc6/getdata.php?chid=${chid}&userip=${userIP}`;
         const response = await axios.get(apiUrl);
+        const script = response.data;
 
-        let streamUrl = response.data;
+        const html = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Stream Page</title>
+            </head>
+            <body>
+                <h1>Stream Content</h1>
+                <div id="stream-container"></div>
+                ${script}
+            </body>
+            </html>
+        `;
 
-        // Basic validation to ensure it's a proper URL and not a script
-        // if (typeof streamUrl !== 'string' || !streamUrl.startsWith('http')) {
-        //     return NextResponse.json({ message: 'Invalid stream URL received' }, { status: 400 });
-        // }
-
-        return NextResponse.json({ message: 'Stream URL fetched successfully', script : response.data });
+        return new NextResponse(html, {
+            headers: { 'Content-Type': 'text/html' },
+        });
     } catch (error) {
         return NextResponse.json({ message: 'Error fetching stream', error: error.message }, { status: 500 });
     }

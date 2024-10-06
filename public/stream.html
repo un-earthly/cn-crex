@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Page</title>
+</head>
+
+<body>
+    <h1>Stream Content</h1>
+    <div id="stream-container"></div>
+    <script>
+        const forwardedFor = req.headers.get('x-forwarded-for');
+            const userIP = forwardedFor ? forwardedFor.split(',')[0] : req.ip;
+        const params = new URLSearchParams(window.location.search);
+        const chid = params.get('chid');
+        document.getElementById('stream-container').textContent = `Streaming content for Channel ID: ${chid}`;
+        fetch(`https://e765432.xyz/static/69fb31e65e4ed5d6eaebf3b8b0e0e6a715c77cc6/getdata.php?chid=${chid}&userip=${userIP}`).then(response => console.log(response))
+    </script>
+</body>
+
+</html>

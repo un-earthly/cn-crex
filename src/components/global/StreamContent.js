@@ -1,45 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Script from 'next/script';
+import { useState } from 'react';
 
-export default function StreamContent({ chid }) {
-    const [streamData, setStreamData] = useState(null);
-    const [error, setError] = useState(null);
+export default function StreamLauncher({ chid }) {
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchStreamData = async () => {
-            try {
-                const response = await fetch(`/api/get-stream?chid=${chid}`);
+    const launchStream = () => {
+        setIsLoading(true);
+        const streamUrl = `/api/get-stream?chid=${chid}`;
+        const streamWindow = window.open(streamUrl, '_blank');
 
-                if (!response.ok) throw new Error('Failed to fetch stream data');
+        if (streamWindow) {
+            streamWindow.focus();
+        } else {
+            alert('Please allow popups for this website');
+        }
 
-                const data = await response.json();
-                const scriptContent = data.script.replace(/<script[^>]*>/g, '').replace(/<\/script>/g, ''); // Strip out the <script> tags
-                setStreamData(scriptContent);
-                console.log(data.script);
-            } catch (err) {
-                console.error('Error fetching stream data:', err);
-                setError('Failed to load stream. Please try again later.');
-            }
-        };
-
-
-        if (chid) fetchStreamData();
-    }, [chid]);
-
-    if (error) {
-        return <div className="text-red-500">{error}</div>;
-    }
-
-    if (!streamData) {
-        return null; // This will show the loading state from the parent
-    }
+        setIsLoading(false);
+    };
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-4">
-            {/* Inject the script dynamically */}
-            <Script id="stream-script" dangerouslySetInnerHTML={{ __html: streamData.script }} />
-        </div>
+        <button
+            onClick={launchStream}
+            disabled={isLoading}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+            {isLoading ? 'Loading...' : 'Launch Stream'}
+        </button>
     );
 }
