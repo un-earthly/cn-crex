@@ -65,19 +65,21 @@ export default function Page({ params }) {
                                     </div>
                                 </>
                             ) : (
-                                <>
+                                <div className='flex items-center justify-center'>
                                     <Avatar className="w-24 h-24 mb-4">
                                         <AvatarImage src={data.topPlayer?.imageUrl} alt={data.topPlayer?.name} />
                                         <AvatarFallback>{data.topPlayer?.name?.substring(0, 2)}</AvatarFallback>
                                     </Avatar>
-                                    <div className='flex justify-between items-start w-full'>
-                                        <div>
-                                            <h3 className="text-xl font-semibold">{data.topPlayer?.name}</h3>
-                                            <p className="text-sm text-muted-foreground">{data.topPlayer?.team}</p>
+                                    <div>
+                                        <div className='flex justify-between items-start w-full'>
+                                            <div>
+                                                <h3 className="text-xl font-semibold">{data.topPlayer?.name.replace(/([a-z])([A-Z])/g, '$1 $2')}</h3>
+                                                <p className="text-sm text-muted-foreground">{data.topPlayer?.team}</p>
+                                            </div>
                                         </div>
-                                        <p className="text-lg font-bold">Rating: {data.topPlayer?.rating}</p>
+                                        <p className="text-md font-medium text-gray-700">Rating: {data.topPlayer?.rating}</p>
                                     </div>
-                                </>
+                                </div>
                             )}
                         </Card>
 
@@ -95,7 +97,11 @@ export default function Page({ params }) {
                                     {data.rankings.map((item) => (
                                         <TableRow key={item.rank}>
                                             <TableCell>{item.rank}</TableCell>
-                                            <TableCell>{isTeamRanking ? item.team : item.name}</TableCell>
+                                            <TableCell>
+                                                {isTeamRanking
+                                                    ? item.team
+                                                    : item.name.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                                            </TableCell>
                                             {!isTeamRanking && <TableCell>{item.team}</TableCell>}
                                             <TableCell>{item.rating}</TableCell>
                                         </TableRow>
