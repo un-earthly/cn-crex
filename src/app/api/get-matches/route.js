@@ -1,11 +1,5 @@
 import axios from "axios"
 
-// export default async function GET(req, res) {
-//    
-// }
-
-
-// export const dynamic = 'force-static'
 export async function GET() {
     try {
         const response = await axios.get("https://e765432.xyz/static/69fb31e65e4ed5d6eaebf3b8b0e0e6a715c77cc6/geteventlist.php");
