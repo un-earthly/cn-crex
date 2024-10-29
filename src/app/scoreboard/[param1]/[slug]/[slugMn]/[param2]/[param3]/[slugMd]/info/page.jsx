@@ -1,138 +1,66 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CloudRain, Thermometer, Droplets } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { CloudRain, Thermometer, Droplets, AlertCircleIcon } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import axios from 'axios';
 import Loading from '@/components/global/loading';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import DataNotFound from '@/components/global/notfound';
-export default function CricketMatchPage({ params }) {
-    const { param1, slug, slugMn, param2, param3, slugMd } = params;
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE}/api/match/scoreboard/${param1}/${slug}/${slugMn}/${param2}/${param3}/${slugMd}/info`);
-                setData(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+const ErrorAlert = ({ message }) => (
+    <Alert variant="destructive" className="mb-4">
+        <AlertCircleIcon className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{message}</AlertDescription>
+    </Alert>
+);
 
-        fetchData();
-    }, [param1, slug, slugMn, param2, param3, slugMd]);
-
-    if (loading) {
-        return <Loading />;
-    }
-
-    if (!data) {
-        return <DataNotFound />
-    }
-
-    const { seriesInfo, venueDetails, playerData } = data;
-    const teamKeys = Object.keys(playerData.teamsData);
-
-    // Get the first and second teams dynamically
-    const firstTeam = teamKeys[0]; // ENG in your example
-    const secondTeam = teamKeys[1]; // SL in your example
-
-    // Access the players for the first and second teams
-    const firstTeamPlayers = playerData.teamsData[firstTeam];
-    const secondTeamPlayers = playerData.teamsData[secondTeam];
+const SafeImage = ({ src, alt, width, height, className = "", fallbackSrc = "/placeholder.png" }) => {
+    const [imgSrc, setImgSrc] = useState(src);
 
     return (
-        <div className="container mx-auto p-4">
-
-
-            <Card className="mb-4">
-                <CardHeader>
-                    <CardTitle>Series Info</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p>{seriesInfo.matchFormat}</p>
-                    <p>{seriesInfo.seriesName}</p>
-                    <img src={seriesInfo.seriesImageUrl} alt="Series" width={100} height={50} />
-                </CardContent>
-            </Card>
-
-            <Card className="mb-4">
-                <CardHeader>
-                    <CardTitle>Venue Details</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="font-semibold">{venueDetails.venueName}</p>
-                    <div className="flex items-center space-x-4 mt-2">
-                        <Badge variant="secondary">{venueDetails.weather.condition}</Badge>
-                        <span className="flex items-center">
-                            <Thermometer className="w-4 h-4 mr-1" />
-                            {venueDetails.weather.temperature}
-                        </span>
-                        <span className="flex items-center">
-                            <Droplets className="w-4 h-4 mr-1" />
-                            {venueDetails.weather.humidity}
-                        </span>
-                        <span className="flex items-center">
-                            <CloudRain className="w-4 h-4 mr-1" />
-                            {venueDetails.weather.chanceOfRain}
-                        </span>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Tabs defaultValue={firstTeam} className="mb-4">
-                <TabsList>
-                    <TabsTrigger value={firstTeam}>{firstTeam}</TabsTrigger>
-                    <TabsTrigger value={secondTeam}>{secondTeam}</TabsTrigger>
-                </TabsList>
-                <TabsContent value={firstTeam}>
-                    <TeamSquad players={firstTeamPlayers} />
-                </TabsContent>
-                <TabsContent value={secondTeam}>
-                    <TeamSquad players={secondTeamPlayers} />
-                </TabsContent>
-            </Tabs>
-
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Toss</CardTitle>
-                </CardHeader>
-                <CardContent className="flex items-center">
-                    <img src={playerData.toss.icon} alt="Toss" width={24} height={24} className="mr-2" />
-                    <p>{playerData.toss.text}</p>
-                </CardContent>
-            </Card>
-        </div>
+        <img
+            src={imgSrc}
+            alt={alt}
+            width={width}
+            height={height}
+            className={className}
+            onError={() => setImgSrc(fallbackSrc)}
+        />
     );
-}
+};
 
-function TeamCard({ team }) {
+const PlayerCard = ({ player = {} }) => {
+    const { name = "Unknown Player", image = "", title = "", role = "" } = player;
+    const initials = name.split(' ').map(n => n[0]).join('');
+
     return (
         <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center">
-                    <img src={team.imageUrl} alt={team.name} width={24} height={24} className="mr-2" />
-                    {team.name}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className="text-2xl font-bold">{team.score}</p>
-                <p>{team.overs} overs</p>
+            <CardContent className="flex items-center p-4">
+                <Avatar className="mr-2">
+                    <AvatarImage src={image} alt={name} />
+                    <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <p className="font-semibold">{name}</p>
+                    <p className="text-sm text-muted-foreground">{title} {role}</p>
+                </div>
             </CardContent>
         </Card>
     );
-}
-function TeamSquad({ players }) {
-    const playingXI = players?.slice(0, 11);
-    const bench = players?.slice(11);
+};
+
+const TeamSquad = ({ players = [] }) => {
+    const playingXI = players?.slice(0, 11) || [];
+    const bench = players?.slice(11) || [];
+
+    if (!players.length) {
+        return <p className="text-center text-gray-500">No player data available</p>;
+    }
 
     return (
         <div>
@@ -159,21 +87,146 @@ function TeamSquad({ players }) {
             )}
         </div>
     );
-}
+};
 
-function PlayerCard({ player }) {
+export default function CricketMatchPage({ params }) {
+    const { param1, slug, slugMn, param2, param3, slugMd } = params ?? {};
+    const [state, setState] = useState({
+        data: null,
+        loading: true,
+        error: null
+    });
+
+    useEffect(() => {
+        const fetchMatchData = async () => {
+            if (!param1 || !slug || !slugMn || !param2 || !param3 || !slugMd) {
+                setState(prev => ({
+                    ...prev,
+                    error: 'Invalid match parameters',
+                    loading: false
+                }));
+                return;
+            }
+
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_BASE}/api/match/scoreboard/${param1}/${slug}/${slugMn}/${param2}/${param3}/${slugMd}/info`
+                );
+
+                if (!response?.data) {
+                    throw new Error('Invalid data format received');
+                }
+
+                setState(prev => ({
+                    ...prev,
+                    data: response.data,
+                    error: null,
+                    loading: false
+                }));
+            } catch (err) {
+                console.error('Error fetching match data:', err);
+                setState(prev => ({
+                    ...prev,
+                    error: err.response?.data?.message || 'Failed to load match information',
+                    loading: false
+                }));
+            }
+        };
+
+        fetchMatchData();
+    }, [param1, slug, slugMn, param2, param3, slugMd]);
+
+    if (state.loading) return <Loading />;
+
+    if (state.error) {
+        return (
+            <div className="container mx-auto p-4">
+                <ErrorAlert message={state.error} />
+            </div>
+        );
+    }
+
+    if (!state.data) return <DataNotFound />;
+
+    const { seriesInfo = {}, venueDetails = {}, playerData = {} } = state.data;
+    const teamKeys = Object.keys(playerData.teamsData || {});
+    const firstTeam = teamKeys[0] || 'Team 1';
+    const secondTeam = teamKeys[1] || 'Team 2';
+
     return (
-        <Card>
-            <CardContent className="flex items-center p-4">
-                <Avatar className="mr-2">
-                    <AvatarImage src={player.image} alt={player.name} />
-                    <AvatarFallback>{player.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                </Avatar>
-                <div>
-                    <p className="font-semibold">{player.name}</p>
-                    <p className="text-sm text-muted-foreground">{player.title} {player.role}</p>
-                </div>
-            </CardContent>
-        </Card>
+        <div className="container mx-auto p-4">
+            <Card className="mb-4">
+                <CardHeader>
+                    <CardTitle>Series Info</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p>{seriesInfo.matchFormat || 'Format not available'}</p>
+                    <p>{seriesInfo.seriesName || 'Series name not available'}</p>
+                    <SafeImage
+                        src={seriesInfo.seriesImageUrl}
+                        alt="Series"
+                        width={100}
+                        height={50}
+                    />
+                </CardContent>
+            </Card>
+
+            <Card className="mb-4">
+                <CardHeader>
+                    <CardTitle>Venue Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="font-semibold">{venueDetails.venueName || 'Venue not available'}</p>
+                    {venueDetails.weather && (
+                        <div className="flex items-center space-x-4 mt-2">
+                            <Badge variant="secondary">{venueDetails.weather.condition || 'N/A'}</Badge>
+                            <span className="flex items-center">
+                                <Thermometer className="w-4 h-4 mr-1" />
+                                {venueDetails.weather.temperature || 'N/A'}
+                            </span>
+                            <span className="flex items-center">
+                                <Droplets className="w-4 h-4 mr-1" />
+                                {venueDetails.weather.humidity || 'N/A'}
+                            </span>
+                            <span className="flex items-center">
+                                <CloudRain className="w-4 h-4 mr-1" />
+                                {venueDetails.weather.chanceOfRain || 'N/A'}
+                            </span>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+
+            <Tabs defaultValue={firstTeam} className="mb-4">
+                <TabsList>
+                    <TabsTrigger value={firstTeam}>{firstTeam}</TabsTrigger>
+                    <TabsTrigger value={secondTeam}>{secondTeam}</TabsTrigger>
+                </TabsList>
+                <TabsContent value={firstTeam}>
+                    <TeamSquad players={playerData.teamsData?.[firstTeam]} />
+                </TabsContent>
+                <TabsContent value={secondTeam}>
+                    <TeamSquad players={playerData.teamsData?.[secondTeam]} />
+                </TabsContent>
+            </Tabs>
+
+            {playerData.toss && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Toss</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex items-center">
+                        <SafeImage
+                            src={playerData.toss.icon}
+                            alt="Toss"
+                            width={24}
+                            height={24}
+                            className="mr-2"
+                        />
+                        <p>{playerData.toss.text || 'Toss information not available'}</p>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
     );
 }
